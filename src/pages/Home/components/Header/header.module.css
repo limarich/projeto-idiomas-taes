@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 3.875rem 0;
+  color: #3FB9FF;
+  font-size: 1.5rem;
+}
+
+
+.blob {
+  position: absolute;
+  width: 690px;
+  height: auto;
+
+  left: -280px;
+  top: -380px;
+  z-index: -1;
+}

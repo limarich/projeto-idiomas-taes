@@ -1,0 +1,9 @@
+.container {
+  padding: 0.875rem 0.875rem;
+  border-radius: 32px;
+  border: none;
+  min-width: 240px;
+  background-color: var(--green);
+
+  font-size: 1.25rem;
+}
