@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3.875rem 0;
+  color: #3FB9FF;
+  font-size: 2.5rem;
+}
+
+
+@media (max-width: 910px) {
+
+  .container {
+    justify-content: center;
+  }
+
+  .boxButton {
+    display: none;
+  }
+}
