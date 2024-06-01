@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuestionCard } from "../../components/QuestionCard";
 import styles from "./quiz.module.css";
+import useGeminiApiQuestion from "../../components/utils/api";
+
+interface QuizQuestion {
+  question: string;
+  answer: string;
+  alternatives: string[];
+}
 
 export const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -47,7 +54,28 @@ export const Quiz = () => {
       correctAnswer: "B",
     },
   ];
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await useGeminiApiQuestion();
+        if (response) {
+          setQuizQuestions(response);
+        } else {
+          console.error('sem resposta da api');
+        }
+      } catch (error) {
+        console.error('Error fetching', error);
+      }
+    };
+    fetchData();
+  }, []);
+  
+  console.log(quizQuestions)
+  //console.log('........................................Separador..................................')
+  //console.log(quizQuestions[0].question)
+  //console.log(quizQuestions.map(question => question.question));
   const handleAnswer = (result: "correct" | "incorrect") => {
     if (result === "correct") {
       setCorrectAnswers((previous) => previous + 1);
@@ -74,6 +102,7 @@ export const Quiz = () => {
       </span>
     );
   };
+  
 
   return (
     <div className={styles.container}>

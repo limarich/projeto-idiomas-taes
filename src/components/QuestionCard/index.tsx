@@ -52,7 +52,7 @@ export const QuestionCard = ({
   return (
     <div className={styles.container}>
       <header>
-        <h1>IdioQuest</h1>
+        <h1>Quizz</h1>
         <hr />
       </header>
       <div className={styles["question-container"]}>
