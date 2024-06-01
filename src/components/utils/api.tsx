@@ -57,7 +57,8 @@ async function useGeminiApiQuestion() {
     const response = await result.response;
 
     if (response) {
-      const text = response.text();
+      const text = response.text().replace("```json\n", '').replace("\n```", '');
+      // console.log(text);
       return text;
     } else {
       throw new Error("Empty response received from Google Generative AI");
