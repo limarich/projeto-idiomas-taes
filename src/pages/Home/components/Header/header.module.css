@@ -3,13 +3,45 @@
   justify-content: space-between;
   align-items: center;
   padding: 3.875rem 0;
-  color: #3FB9FF;
+  color: #3fb9ff;
   font-size: 2.5rem;
 }
 
+.custom-select {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+}
+
+.custom-select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 1rem;
+}
+
+.custom-select select {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  appearance: none;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+}
+
+.custom-select select option {
+  padding: 10px;
+  background-color: #f0f0f0;
+  color: #333;
+}
 
 @media (max-width: 910px) {
-
   .container {
     justify-content: center;
   }
