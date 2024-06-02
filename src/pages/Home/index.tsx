@@ -32,7 +32,7 @@ export const Home = () => {
 							bgColor="blue"
 							imgSrc="./frame-puzzle.png"
 							secondary
-							pathname="/quiz"
+							pathname="/memory-game"
 						/>
 						<TrainingBox
 							title="Conversação"
