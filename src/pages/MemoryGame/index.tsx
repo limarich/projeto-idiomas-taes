@@ -4,6 +4,8 @@ import styles from "./memory-game.module.css";
 import { useSpeak } from "../../hooks/useSpeak";
 import { IdiomOptions } from "../Quiz";
 import { useGeminiApi } from "../../hooks/useGeminiApi";
+import { getLocalStorageValue } from "../../components/utils/localstorage";
+import { translations } from "../../translations";
 
 interface MemoPair {
   value: string;
@@ -23,8 +25,7 @@ export const MemoryGame = () => {
     "mandarim",
     "portugues",
   ];
-  const [originLanguage, setOriginLanguage] =
-    useState<IdiomOptions>("portugues");
+
   const [objectiveLanguage, setObjectiveLanguage] =
     useState<IdiomOptions>("ingles");
   const [memoPairs, setMemoPairs] = useState<MemoPair[]>([]);
@@ -34,6 +35,9 @@ export const MemoryGame = () => {
 
   const json_schema = '{ value: "string", corresponding: "string" }';
   const exemplo = '[{ value: "home", corresponding: "casa" }]';
+
+  const originLanguage =
+    getLocalStorageValue<string>("originLanguage") || "portugues";
 
   const prompt = `Me dê ${cardsNumber} nomes no idioma fonte: ${originLanguage} para o idioma objeto: ${objectiveLanguage}. Usando o seguinte esquema JSON: ${json_schema}. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE. Retorne apenas o array`;
 
@@ -103,15 +107,18 @@ export const MemoryGame = () => {
     }
   };
 
+  const { mainSection } =
+    translations[`${originLanguage as keyof typeof translations}`].memoryGame;
+
   return (
     <div className={styles.container}>
-      <h1>Jogo da Memória</h1>
+      <h1>{mainSection.title}</h1>
       <button
         onClick={() => {
           fetchQuestionsData();
         }}
       >
-        iniciar
+        {mainSection.startButton}
       </button>
       <select
         name="cards-number"
@@ -119,7 +126,7 @@ export const MemoryGame = () => {
       >
         <option value="" defaultChecked disabled>
           {" "}
-          escolha uma quantidade
+          {mainSection.cardsSelect}
         </option>
         <option value="5">10</option>
         <option value="10">20</option>
@@ -132,6 +139,10 @@ export const MemoryGame = () => {
         onChange={(e) => setObjectiveLanguage(e.target.value as IdiomOptions)}
         defaultValue={"ingles"}
       >
+        <option value="" defaultChecked disabled>
+          {" "}
+          {mainSection.idiomSelect}
+        </option>
         {options.map((option) => (
           <option
             key={`objective-${option}`}

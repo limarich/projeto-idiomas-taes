@@ -1,4 +1,6 @@
 import { IdiomOptions } from "../..";
+import { getLocalStorageValue } from "../../../../components/utils/localstorage";
+import { translations } from "../../../../translations";
 
 interface Props {
   selectedOrigin: IdiomOptions;
@@ -12,33 +14,20 @@ interface Props {
 
 export const Menu = ({
   onSelectObjective,
-  onSelectOrigin,
   options,
-  selectedObjective,
   selectedOrigin,
   onQuestionNumberChange,
   onNextStepClick,
 }: Props) => {
+  const originLanguage =
+    getLocalStorageValue<string>("originLanguage") || "portugues";
+
+  const { menu } =
+    translations[`${originLanguage as keyof typeof translations}`].quiz;
+
   return (
     <div>
-      <label htmlFor="">Escolha o idioma de origem</label>
-      <select
-        name="origin"
-        id="origin"
-        onChange={(e) => onSelectOrigin(e.target.value as IdiomOptions)}
-        defaultValue={"portugues"}
-      >
-        {options.map((option) => (
-          <option
-            key={`origin-${option}`}
-            value={option}
-            disabled={selectedObjective === option}
-          >
-            {option}
-          </option>
-        ))}
-      </select>
-      <label htmlFor="">Escolha o idioma que aprendizado</label>
+      <label htmlFor="">{menu.selectObjectiveIdiom}</label>
       <select
         name="objective"
         id="objective"
@@ -55,14 +44,14 @@ export const Menu = ({
           </option>
         ))}
       </select>
-      <label htmlFor="">Numero de perguntas</label>
+      <label htmlFor="">{menu.numberOfAnswers}</label>
       <input
         type="number"
         step={5}
         defaultValue={10}
         onChange={(e) => onQuestionNumberChange(parseInt(e.target.value, 10))}
       />
-      <button onClick={onNextStepClick}>próximo</button>
+      <button onClick={onNextStepClick}>{menu.nextButton}</button>
     </div>
   );
 };
