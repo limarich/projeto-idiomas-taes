@@ -1,13 +1,13 @@
 .container {
   display: flex;
   flex-direction: column;
-   /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(7.4px);
-    -webkit-backdrop-filter: blur(7.4px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.4px);
+  -webkit-backdrop-filter: blur(7.4px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   padding: 1rem 2rem;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .question-container h3 {
-  color: #FF7410;
+  color: #ff7410;
   font-family: Rubik;
   font-weight: 600;
 }
@@ -98,7 +98,6 @@
   opacity: 0.95;
 }
 
-
 .next-btn {
   all: unset;
   cursor: pointer;
@@ -117,6 +116,6 @@
 
 .next-btn:hover {
   border: 2px solid var(--secondary);
-  color: #FF7410;
+  color: #ff7410;
   background-color: #ffdbb62c;
 }

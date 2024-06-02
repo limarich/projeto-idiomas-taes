@@ -29,7 +29,7 @@ export const MemoryGame = () => {
   const [objectiveLanguage, setObjectiveLanguage] =
     useState<IdiomOptions>("ingles");
   const [memoPairs, setMemoPairs] = useState<MemoPair[]>([]);
-  const [cardsNumber, setCardsNumber] = useState(10);
+  const [cardsNumber, setCardsNumber] = useState(5);
 
   const { requestApi, isLoading } = useGeminiApi();
 
@@ -112,47 +112,60 @@ export const MemoryGame = () => {
 
   return (
     <div className={styles.container}>
-      <h1>{mainSection.title}</h1>
-      <button
-        onClick={() => {
-          fetchQuestionsData();
-        }}
-      >
-        {mainSection.startButton}
-      </button>
-      <select
-        name="cards-number"
-        onChange={(e) => setCardsNumber(parseInt(e.target.value, 10))}
-      >
-        <option value="" defaultChecked disabled>
-          {" "}
-          {mainSection.cardsSelect}
-        </option>
-        <option value="5">10</option>
-        <option value="10">20</option>
-        <option value="15">30</option>
-      </select>
+      <header>
+        <h1>{mainSection.title}</h1>
 
-      <select
-        name="objective"
-        id="objective"
-        onChange={(e) => setObjectiveLanguage(e.target.value as IdiomOptions)}
-        defaultValue={"ingles"}
-      >
-        <option value="" defaultChecked disabled>
-          {" "}
-          {mainSection.idiomSelect}
-        </option>
-        {options.map((option) => (
-          <option
-            key={`objective-${option}`}
-            value={option}
-            disabled={objectiveLanguage === option}
-          >
-            {option}
-          </option>
-        ))}
-      </select>
+        <div className={styles.options}>
+          <div className={styles["select-wrapper"]}>
+            <select
+              name="cards-number"
+              onChange={(e) => setCardsNumber(parseInt(e.target.value, 10))}
+            >
+              <option value="" defaultChecked disabled>
+                {" "}
+                {mainSection.cardsSelect}
+              </option>
+              <option value="5">10</option>
+              <option value="10">20</option>
+              <option value="15">30</option>
+            </select>
+          </div>
+
+          <div className={styles["select-wrapper"]}>
+            <select
+              name="objective"
+              id="objective"
+              onChange={(e) =>
+                setObjectiveLanguage(e.target.value as IdiomOptions)
+              }
+              defaultValue={"ingles"}
+            >
+              <option value="" defaultChecked disabled>
+                {" "}
+                {mainSection.idiomSelect}
+              </option>
+              {options.map((option) => (
+                <option
+                  key={`objective-${option}`}
+                  value={option}
+                  disabled={objectiveLanguage === option}
+                >
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            fetchQuestionsData();
+          }}
+          className={styles["start-button"]}
+        >
+          {mainSection.startButton}
+        </button>
+      </header>
       {isLoading ? (
         "Carregando..."
       ) : (

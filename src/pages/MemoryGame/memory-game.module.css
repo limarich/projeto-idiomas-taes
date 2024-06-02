@@ -2,27 +2,107 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  justify-content: center;
   height: 100vh;
-  width: 100%;
+  background-color: var(--primary);
 }
 
 .container h1 {
-  color: var(--white);
-  padding-top: 1.5rem;
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.container header {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+.select-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.select-wrapper select {
+  appearance: none;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+  background-color: white;
+}
+
+.select-wrapper::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.select-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  background-color: transparent;
+  pointer-events: none;
 }
 
 .memory-cards-wrapper {
-  margin: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  justify-items: center;
   gap: 10px;
-  align-items: center;
-  width: 50%;
+  width: 80%;
+}
+
+.start-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+  background-color: #388e3c;
+}
+
+@media screen and (max-width: 768px) {
+  .memory-cards-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media screen and (max-width: 480px) {
   .memory-cards-wrapper {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
