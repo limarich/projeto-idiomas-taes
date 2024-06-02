@@ -15,7 +15,6 @@ export const useGeminiApi = () => {
 
       if (result && result.response) {
         setIsLoading(false);
-
         const data = result.response
           .text()
           .replace("```json\n", "")
