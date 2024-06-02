@@ -24,6 +24,7 @@ export const Home = () => {
 							subtitle="Escolha a tradução certa para uma palavra especifica"
 							bgColor="orange"
 							imgSrc="./frame-quiz.png"
+							pathname="/quiz"
 						/>
 						<TrainingBox
 							title="Quebra Cabeça"
@@ -31,12 +32,14 @@ export const Home = () => {
 							bgColor="blue"
 							imgSrc="./frame-puzzle.png"
 							secondary
+							pathname="/quiz"
 						/>
 						<TrainingBox
 							title="Conversação"
 							subtitle="Seja inserido em contextos do dia a dia e escreva respostas válidas para cada situação"
 							bgColor="purple"
 							imgSrc="./frame-talk.png"
+							pathname="/quiz"
 						/>
 					</div>
 				</div>
