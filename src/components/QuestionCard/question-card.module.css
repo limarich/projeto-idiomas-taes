@@ -1,9 +1,13 @@
 .container {
   display: flex;
   flex-direction: column;
-  background: var(--purple);
-  background-color: #fff;
-  border-radius: 8px;
+   /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(7.4px);
+    -webkit-backdrop-filter: blur(7.4px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
   padding: 1rem 2rem;
 }
 
@@ -30,7 +34,7 @@
 }
 
 .question-container h3 {
-  color: var(--secondary);
+  color: #FF7410;
   font-family: Rubik;
   font-weight: 600;
 }
@@ -63,10 +67,10 @@
   font-size: 1.125rem;
   font-weight: 500;
 }
-.options li button:hover {
-  background: var(--purple);
-  color: var(--white);
-  font-weight: 700;
+.options li button:hover:not(:focus):not(:disabled) {
+  background: #e7f6ff;
+  /* color: var(--white); */
+  font-weight: 500;
 }
 
 .options li button b {
@@ -77,7 +81,7 @@
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  background: var(--primary);
+  background: #7bcfff;
   color: var(--white);
 }
 .options .correct {
@@ -94,16 +98,17 @@
   opacity: 0.95;
 }
 
+
 .next-btn {
   all: unset;
   cursor: pointer;
 
   align-self: flex-start;
 
-  padding: 0.8rem 0.5rem;
+  padding: 0.8rem 1rem;
   border-radius: 4px;
 
-  border: 1px solid var(--primary);
+  border: 2px solid var(--primary);
 
   font-weight: 700;
   margin-bottom: 1rem;
@@ -111,6 +116,7 @@
 }
 
 .next-btn:hover {
-  background: var(--secondary);
-  color: var(--white);
+  border: 2px solid var(--secondary);
+  color: #FF7410;
+  background-color: #ffdbb62c;
 }
