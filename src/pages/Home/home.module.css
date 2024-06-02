@@ -1,3 +1,7 @@
+body {
+  background-color: var(--bg-color);
+}
+
 .container {
   max-width: 1264px;
   padding: 0 2rem;
