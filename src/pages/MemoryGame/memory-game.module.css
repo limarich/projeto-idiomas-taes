@@ -15,7 +15,14 @@
 .memory-cards-wrapper {
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 10px;
   align-items: center;
+  width: 50%;
+}
+
+@media screen and (max-width: 480px) {
+  .memory-cards-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

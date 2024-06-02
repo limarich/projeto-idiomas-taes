@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { MemoryCard } from "../../components/MemoryCard";
 import styles from "./memory-game.module.css";
 import { useSpeak } from "../../hooks/useSpeak";
+import { IdiomOptions } from "../Quiz";
+import { useGeminiApi } from "../../hooks/useGeminiApi";
 
 interface MemoPair {
   value: string;
@@ -13,28 +15,35 @@ interface Card extends MemoPair {
 }
 
 export const MemoryGame = () => {
-  const memoPairs = [
-    { value: "home", corresponding: "casa" },
-    { value: "man", corresponding: "homem" },
-    { value: "kid", corresponding: "criança" },
-    { value: "dog", corresponding: "cachorro" },
-    { value: "cat", corresponding: "gato" },
-    { value: "car", corresponding: "carro" },
-    // { value: "tree", corresponding: "árvore" },
-    // { value: "book", corresponding: "livro" },
-    // { value: "water", corresponding: "água" },
-    // { value: "food", corresponding: "comida" },
-    // { value: "sun", corresponding: "sol" },
-    // { value: "moon", corresponding: "lua" },
-    // { value: "star", corresponding: "estrela" },
-    // { value: "house", corresponding: "casa" },
-    // { value: "woman", corresponding: "mulher" },
-    // { value: "child", corresponding: "criança" },
-    // { value: "bird", corresponding: "pássaro" },
-    // { value: "fish", corresponding: "peixe" },
-    // { value: "school", corresponding: "escola" },
-    // { value: "teacher", corresponding: "professor" },
+  const options: IdiomOptions[] = [
+    "espanhol",
+    "ingles",
+    "italiano",
+    "japones",
+    "mandarim",
+    "portugues",
   ];
+  const [originLanguage, setOriginLanguage] =
+    useState<IdiomOptions>("portugues");
+  const [objectiveLanguage, setObjectiveLanguage] =
+    useState<IdiomOptions>("ingles");
+  const [memoPairs, setMemoPairs] = useState<MemoPair[]>([]);
+  const [cardsNumber, setCardsNumber] = useState(10);
+
+  const { requestApi, isLoading } = useGeminiApi();
+
+  const json_schema = '{ value: "string", corresponding: "string" }';
+  const exemplo = '[{ value: "home", corresponding: "casa" }]';
+
+  const prompt = `Me dê ${cardsNumber} nomes no idioma fonte: ${originLanguage} para o idioma objeto: ${objectiveLanguage}. Usando o seguinte esquema JSON: ${json_schema}. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE. Retorne apenas o array`;
+
+  const fetchQuestionsData = async () => {
+    const res = await requestApi<MemoPair[]>(prompt);
+    if (res) {
+      console.log(res);
+      setMemoPairs(res);
+    }
+  };
 
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -43,18 +52,24 @@ export const MemoryGame = () => {
   const { speak } = useSpeak();
 
   useEffect(() => {
-    const shuffledCards = shuffleArray(
-      memoPairs.flatMap((pair, index) => [
-        { id: index * 2, value: pair.value, corresponding: pair.corresponding },
-        {
-          id: index * 2 + 1,
-          value: pair.corresponding,
-          corresponding: pair.value,
-        },
-      ])
-    );
-    setCards(shuffledCards);
-  }, []);
+    if (memoPairs) {
+      const shuffledCards = shuffleArray(
+        memoPairs.flatMap((pair, index) => [
+          {
+            id: index * 2,
+            value: pair.value,
+            corresponding: pair.corresponding,
+          },
+          {
+            id: index * 2 + 1,
+            value: pair.corresponding,
+            corresponding: pair.value,
+          },
+        ])
+      );
+      setCards(shuffledCards);
+    }
+  }, [memoPairs]);
 
   const shuffleArray = (array: Card[]) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -91,17 +106,57 @@ export const MemoryGame = () => {
   return (
     <div className={styles.container}>
       <h1>Jogo da Memória</h1>
-      <div className={styles["memory-cards-wrapper"]}>
-        {cards.map((card, index) => (
-          <MemoryCard
-            key={card.id}
-            value={card.value}
-            onClick={() => handleCardClick(index)}
-            isFlipped={flippedCards.includes(index)}
-            isMatched={matchedCards.includes(index)}
-          />
+      <button
+        onClick={() => {
+          fetchQuestionsData();
+        }}
+      >
+        iniciar
+      </button>
+      <select
+        name="cards-number"
+        onChange={(e) => setCardsNumber(parseInt(e.target.value, 10))}
+      >
+        <option value="" defaultChecked disabled>
+          {" "}
+          escolha uma quantidade
+        </option>
+        <option value="5">10</option>
+        <option value="10">20</option>
+        <option value="15">30</option>
+      </select>
+
+      <select
+        name="objective"
+        id="objective"
+        onChange={(e) => setObjectiveLanguage(e.target.value as IdiomOptions)}
+        defaultValue={"ingles"}
+      >
+        {options.map((option) => (
+          <option
+            key={`objective-${option}`}
+            value={option}
+            disabled={objectiveLanguage === option}
+          >
+            {option}
+          </option>
         ))}
-      </div>
+      </select>
+      {isLoading ? (
+        "Carregando..."
+      ) : (
+        <div className={styles["memory-cards-wrapper"]}>
+          {cards.map((card, index) => (
+            <MemoryCard
+              key={card.id}
+              value={card.value}
+              onClick={() => handleCardClick(index)}
+              isFlipped={flippedCards.includes(index)}
+              isMatched={matchedCards.includes(index)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
