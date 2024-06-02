@@ -3,29 +3,24 @@ import styles from "./question-card.module.css";
 
 interface Props {
   question: string;
-  answers: Answer[];
+  answers: string[];
   correctAnswer: string;
   onAnswer: (result: "correct" | "incorrect") => void;
 }
-interface Answer {
-  label: string;
-  value: string;
-}
-
 export const QuestionCard = ({
   question,
   answers,
   correctAnswer,
   onAnswer,
 }: Props) => {
-  const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answerResult, setAnswerResult] = useState<
     "correct" | "incorrect" | null
   >(null);
 
-  const handleAnswerClick = (answer: Answer) => {
+  const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
-    if (answer.value === correctAnswer) {
+    if (answer === correctAnswer) {
       setAnswerResult("correct");
     } else {
       setAnswerResult("incorrect");
@@ -38,12 +33,12 @@ export const QuestionCard = ({
     return "";
   };
 
-  const handleOptionClassName = (answer: Answer) => {
+  const handleOptionClassName = (answer: string) => {
     if (!selectedAnswer) return styles.option;
-    if (selectedAnswer.value === answer.value && answerResult === "correct") {
+    if (selectedAnswer === answer && answerResult === "correct") {
       return `${styles.option} ${styles.correct}`;
     }
-    if (selectedAnswer.value === answer.value && answerResult === "incorrect") {
+    if (selectedAnswer === answer && answerResult === "incorrect") {
       return `${styles.option} ${styles.incorrect}`;
     }
     return styles.option;
@@ -64,7 +59,7 @@ export const QuestionCard = ({
                 onClick={() => handleAnswerClick(answer)}
                 className={handleOptionClassName(answer)}
               >
-                <b>{handleAnswerIndex(index)}</b> {answer.label}
+                <b>{handleAnswerIndex(index)}</b> {answer}
               </button>
             </li>
           ))}

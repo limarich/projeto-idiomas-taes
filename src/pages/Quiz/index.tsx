@@ -1,137 +1,114 @@
 import { useEffect, useState } from "react";
 import { QuestionCard } from "../../components/QuestionCard";
 import styles from "./quiz.module.css";
-import { UseGeminiApiQuestion } from "../../components/utils/api";
+import { useGeminiApi } from "../../hooks/useGeminiApi";
 
 interface QuizQuestion {
-	question: string;
-	answer: string;
-	alternatives: string[];
+  question: string;
+  answer: string;
+  alternatives: string[];
 }
 
 export const Quiz = () => {
-	const [currentQuestion, setCurrentQuestion] = useState(0);
-	const [correctAnswers, setCorrectAnswers] = useState(0);
-	const questions = [
-		{
-			question: "Como se diz Macaco 🐒 em inglês?",
-			answers: [
-				{ value: "A", label: "Monkey" },
-				{ value: "B", label: "Kid" },
-				{ value: "C", label: "Fancy" },
-				{ value: "D", label: "Frog" },
-			],
-			correctAnswer: "A",
-		},
-		{
-			question: "Qual é a capital do Brasil?",
-			answers: [
-				{ value: "A", label: "Rio de Janeiro" },
-				{ value: "B", label: "São Paulo" },
-				{ value: "C", label: "Brasília" },
-				{ value: "D", label: "Belo Horizonte" },
-			],
-			correctAnswer: "C",
-		},
-		{
-			question: "Quem escreveu 'Romeu e Julieta'?",
-			answers: [
-				{ value: "A", label: "William Shakespeare" },
-				{ value: "B", label: "Charles Dickens" },
-				{ value: "C", label: "Jane Austen" },
-				{ value: "D", label: "Mark Twain" },
-			],
-			correctAnswer: "A",
-		},
-		{
-			question: "Qual é o maior planeta do sistema solar?",
-			answers: [
-				{ value: "A", label: "Marte" },
-				{ value: "B", label: "Júpiter" },
-				{ value: "C", label: "Vênus" },
-				{ value: "D", label: "Saturno" },
-			],
-			correctAnswer: "B",
-		},
-	];
-	const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
+  const { requestApi, isLoading } = useGeminiApi();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await UseGeminiApiQuestion();
-				const data = JSON.parse(response);
-				if (response) {
-					setQuizQuestions(data);
-				} else {
-					console.error("sem resposta da api");
-				}
-			} catch (error) {
-				console.error("Error fetching", error);
-			}
-		};
-		fetchData();
-	}, []);
+  const qt_perguntas = 10;
+  const idioma_fonte = "português";
+  const idioma_objeto = "inglês";
 
-	console.log(quizQuestions);
-	//console.log('........................................Separador..................................')
-	//console.log(quizQuestions[0].question)
-	//console.log(quizQuestions.map(question => question.question));
-	const handleAnswer = (result: "correct" | "incorrect") => {
-		if (result === "correct") {
-			setCorrectAnswers((previous) => previous + 1);
-		}
-		setCurrentQuestion((previous) => previous + 1);
-	};
+  const json_schema =
+    '{"question": string, "answer": string, "alternatives": string[]}';
+  const exemplo =
+    '[{"question": "Qual é a tradução da palavra \'Tree\' em português?", "answer": "Árvore", "alternatives": ["Três", "Galho", "Tronco", "Árvore"]}]';
 
-	const handleFeedback = () => {
-		const result = correctAnswers - questions.length / 2;
+  const prompt = `Me dê ${qt_perguntas} perguntas aleatórias em formato de quiz a respeito da tradução de palavras quaisquer no idioma fonte: ${idioma_fonte} para o idioma objeto: ${idioma_objeto}. Usando o seguinte esquema JSON: ${json_schema}. Retorne apenas um array de questões. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE e lembre sempre de incluir a resposta no array de alternativas. O nome do campo de respostas deve ser answer.`;
 
-		if (result > 0)
-			return (
-				<span className={`${styles.feedback} ${styles.good}`}>Parabéns!!!</span>
-			);
-		if (result === 0)
-			return (
-				<span className={`${styles.feedback} ${styles.medium}`}>
-					Tente praticar mais
-				</span>
-			);
-		return (
-			<span className={`${styles.feedback} ${styles.bad}`}>
-				Não Desista ainda!
-			</span>
-		);
-	};
+  const fetchQuestionsData = async () => {
+    const res = await requestApi<QuizQuestion[]>(prompt);
+    if (res) {
+      setQuizQuestions(res);
+    }
+  };
 
-	return (
-		<div className={styles.container}>
-			{currentQuestion < questions.length ? (
-				<QuestionCard
-					question={questions[currentQuestion].question}
-					answers={questions[currentQuestion].answers}
-					correctAnswer={questions[currentQuestion].correctAnswer}
-					onAnswer={(result: "correct" | "incorrect") => handleAnswer(result)}
-				/>
-			) : (
-				<div className={styles["feedback-container"]}>
-					<span className={styles.hits}>acertos:{correctAnswers} </span>
-					<span className={styles.errors}>
-						erros:{questions.length - correctAnswers}{" "}
-					</span>
-					{handleFeedback()}
+  useEffect(() => {
+    fetchQuestionsData();
+  }, []);
 
-					<button
-						onClick={() => {
-							setCurrentQuestion(0);
-							setCorrectAnswers(0);
-						}}
-						className={styles["restart-btn"]}
-					>
-						Recomeçar
-					</button>
-				</div>
-			)}
-		</div>
-	);
+  const handleAnswer = (result: "correct" | "incorrect") => {
+    if (result === "correct") {
+      setCorrectAnswers((prevCorrectAnswers) => prevCorrectAnswers + 1);
+    }
+    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+  };
+
+  const handleFeedback = () => {
+    const totalQuestions = quizQuestions.length;
+
+    if (correctAnswers === totalQuestions) {
+      return (
+        <span className={`${styles.feedback} ${styles.good}`}>Parabéns!!!</span>
+      );
+    } else if (correctAnswers === 0) {
+      return (
+        <span className={`${styles.feedback} ${styles.bad}`}>
+          Não Desista ainda!
+        </span>
+      );
+    } else {
+      return (
+        <span className={`${styles.feedback} ${styles.medium}`}>
+          Tente praticar mais
+        </span>
+      );
+    }
+  };
+
+  const restartQuiz = () => {
+    setCurrentQuestion(0);
+    setCorrectAnswers(0);
+  };
+  const newQuiz = () => {
+    setCurrentQuestion(0);
+    setCorrectAnswers(0);
+    fetchQuestionsData();
+  };
+
+  return (
+    <div className={styles.container}>
+      {isLoading ? (
+        "carregando..."
+      ) : (
+        <>
+          {currentQuestion < quizQuestions.length ? (
+            <QuestionCard
+              question={quizQuestions[currentQuestion].question}
+              answers={quizQuestions[currentQuestion].alternatives}
+              correctAnswer={quizQuestions[currentQuestion].answer}
+              onAnswer={(result: "correct" | "incorrect") =>
+                handleAnswer(result)
+              }
+            />
+          ) : (
+            <div className={styles["feedback-container"]}>
+              <span className={styles.hits}>acertos:{correctAnswers}</span>
+              <span className={styles.errors}>
+                erros:{quizQuestions.length - correctAnswers}
+              </span>
+              {handleFeedback()}
+              <button onClick={restartQuiz} className={styles["restart-btn"]}>
+                Recomeçar
+              </button>
+
+              <button onClick={newQuiz} className={styles["restart-btn"]}>
+                Novas perguntas
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
