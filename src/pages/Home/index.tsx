@@ -1,3 +1,4 @@
+import QRCode from "react-qr-code";
 import { getLocalStorageValue } from "../../components/utils/localstorage";
 import { translations } from "../../translations";
 import { Header } from "./components/Header";
@@ -5,7 +6,8 @@ import { HeroSection } from "./components/HeroSection";
 import { TrainingBox } from "./components/TrainingBox";
 
 import styles from "./home.module.css";
-
+const URI =
+  "https://665d22c537abf6e12fca1c15--dreamy-cocada-c6a708.netlify.app/";
 export const Home = () => {
   const originLanguage =
     getLocalStorageValue<string>("originLanguage") || "portugues";
@@ -63,6 +65,34 @@ export const Home = () => {
           </div>
         </div>
       </main>
+      <div
+        style={{
+          height: "auto",
+          margin: "0 auto",
+          width: "300px",
+          aspectRatio: 1,
+        }}
+      >
+        <h1
+          style={{
+            color: "var(--text-color)",
+            marginBottom: "1rem",
+          }}
+        >
+          Acesse em:
+        </h1>
+        <QRCode
+          size={256}
+          style={{
+            height: "auto",
+            maxWidth: "100%",
+            width: "100%",
+            marginBottom: "1rem",
+          }}
+          value={URI}
+          viewBox={`0 0 256 256`}
+        />
+      </div>
     </div>
   );
 };
