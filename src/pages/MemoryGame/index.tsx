@@ -6,6 +6,7 @@ import { IdiomOptions } from "../Quiz";
 import { useGeminiApi } from "../../hooks/useGeminiApi";
 import { getLocalStorageValue } from "../../components/utils/localstorage";
 import { translations } from "../../translations";
+import { useNavigate } from "react-router-dom";
 
 interface MemoPair {
   value: string;
@@ -112,11 +113,29 @@ export const MemoryGame = () => {
     }
   };
 
+  const navigate = useNavigate();
   const { mainSection } =
     translations[`${originLanguage as keyof typeof translations}`].memoryGame;
 
   return (
     <div className={styles.container}>
+      <button
+        onClick={() => navigate("/")}
+        style={{
+          position: "fixed",
+          top: "20px",
+          left: "20px",
+          zIndex: "999",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          padding: "10px 20px",
+          borderRadius: "5px",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Voltar
+      </button>
       <header>
         <h1>{mainSection.title}</h1>
 
