@@ -53,6 +53,11 @@ export const MemoryGame = () => {
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
 
+  const resetStates = () => {
+    setFlippedCards([]);
+    setMatchedCards([]);
+  };
+
   const { speak } = useSpeak();
 
   useEffect(() => {
@@ -159,6 +164,7 @@ export const MemoryGame = () => {
 
         <button
           onClick={() => {
+            resetStates();
             fetchQuestionsData();
           }}
           className={styles["start-button"]}
