@@ -7,6 +7,7 @@ import { useGeminiApi } from "../../hooks/useGeminiApi";
 import { getLocalStorageValue } from "../../components/utils/localstorage";
 import { translations } from "../../translations";
 import { useNavigate } from "react-router-dom";
+import { Loading } from "../../components/Loading";
 
 interface MemoPair {
   value: string;
@@ -32,7 +33,7 @@ export const MemoryGame = () => {
   const [memoPairs, setMemoPairs] = useState<MemoPair[]>([]);
   const [cardsNumber, setCardsNumber] = useState(5);
 
-  const { requestApi, isLoading } = useGeminiApi();
+  const { requestApi, isLoading, hasError } = useGeminiApi();
 
   const json_schema = '{ value: "string", corresponding: "string" }';
   const exemplo = '[{ value: "home", corresponding: "casa" }]';
@@ -40,7 +41,7 @@ export const MemoryGame = () => {
   const originLanguage =
     getLocalStorageValue<string>("originLanguage") || "portugues";
 
-  const prompt = `Me dê ${cardsNumber} nomes no idioma fonte: ${originLanguage} para o idioma objeto: ${objectiveLanguage}. Usando o seguinte esquema JSON: ${json_schema}. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE. Retorne apenas o array`;
+  const prompt = `Me dê ${cardsNumber} nomes no idioma fonte: ${originLanguage} para o idioma objeto: ${objectiveLanguage}. Usando o seguinte esquema JSON: ${json_schema}. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE. Retorne apenas o array. Retorne apenas o objeto no formato solicitado`;
 
   const fetchQuestionsData = async () => {
     const res = await requestApi<MemoPair[]>(prompt);
@@ -192,7 +193,7 @@ export const MemoryGame = () => {
         </button>
       </header>
       {isLoading ? (
-        "Carregando..."
+        <Loading />
       ) : (
         <div className={styles["memory-cards-wrapper"]}>
           {cards.map((card, index) => (
@@ -204,6 +205,11 @@ export const MemoryGame = () => {
               isMatched={matchedCards.includes(index)}
             />
           ))}
+          {hasError && (
+            <button onClick={() => window.location.reload()}>
+              Erro no servidor, por favor clique aqui para recarregar a página
+            </button>
+          )}
         </div>
       )}
     </div>

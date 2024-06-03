@@ -32,14 +32,14 @@ export const Quiz = () => {
     useState<IdiomOptions>("ingles");
   const [questionsNumber, setQuestionsNumber] = useState(10);
 
-  const { requestApi, isLoading } = useGeminiApi();
+  const { requestApi, isLoading, hasError } = useGeminiApi();
 
   const json_schema =
     '{"question": string, "answer": string, "alternatives": string[]}';
   const exemplo =
     '[{"question": "Qual é a tradução da palavra \'Tree\' em português?", "answer": "Árvore", "alternatives": ["Três", "Galho", "Tronco", "Árvore"]}]';
 
-  const prompt = `Me dê ${questionsNumber} perguntas aleatórias em formato de quiz a respeito da tradução de palavras quaisquer no idioma fonte: ${originLanguage} para o idioma objeto: ${objectiveLanguage}. Usando o seguinte esquema JSON: ${json_schema}. Retorne apenas um array de questões. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE e lembre sempre de incluir a resposta no array de alternativas. O nome do campo de respostas deve ser answer. É importante que a pergunta esteja no mesmo idioma que a origem`;
+  const prompt = `Me dê ${questionsNumber} perguntas aleatórias em formato de quiz a respeito da tradução de palavras quaisquer no idioma fonte: ${originLanguage} para o idioma objeto: ${objectiveLanguage}. Usando o seguinte esquema JSON: ${json_schema}. Retorne apenas um array de questões. Seguindo exatamente no seguinte formato: ${exemplo}. Deixe todas as palavras em formato UNICODE e lembre sempre de incluir a resposta no array de alternativas. O nome do campo de respostas deve ser answer. É importante que a pergunta esteja no mesmo idioma que a origem.Retorne apenas o objeto no formato solicitado.`;
 
   const fetchQuestionsData = async () => {
     const res = await requestApi<QuizQuestion[]>(prompt);
@@ -79,6 +79,7 @@ export const Quiz = () => {
           currentQuestion={currentQuestion}
           handleAnswer={handleAnswer}
           isLoading={isLoading}
+          hasError={hasError}
         />
       );
     }
