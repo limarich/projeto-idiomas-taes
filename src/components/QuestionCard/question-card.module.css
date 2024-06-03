@@ -119,3 +119,15 @@
   color: #ff7410;
   background-color: #ffdbb62c;
 }
+
+@media screen and (max-width: 480px) {
+  .container {
+    width: 90%;
+    margin: auto;
+  }
+  .question-container {
+    width: 100%;
+    margin: auto;
+    padding: 0.25rem;
+  }
+}

@@ -23,12 +23,17 @@ export function HeroSection() {
       </div>
 
       <div className={styles.actionsBox}>
-        <Button text={heroSection.getStartButton} width={320} />
+        <Button
+          text={heroSection.getStartButton}
+          width={320}
+          onClick={() => alert("feature futura rs🤭😅")}
+        />
         <Button
           text={heroSection.AlreadyHasAccount}
           width={320}
           className={styles.button}
           variant="secondary"
+          onClick={() => alert("feature futura rs🤭😅")}
         />
       </div>
     </div>

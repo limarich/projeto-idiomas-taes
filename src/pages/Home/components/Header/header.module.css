@@ -41,12 +41,25 @@
   color: #333;
 }
 
-@media (max-width: 910px) {
+/* @media (max-width: 910px) {
   .container {
     justify-content: center;
   }
 
   .boxButton {
     display: none;
+  }
+} */
+@media (max-width: 480px) {
+  .container {
+    flex-wrap: wrap;
+  }
+  .container h1 {
+    font-size: 4rem;
+  }
+  .boxButton {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
   }
 }

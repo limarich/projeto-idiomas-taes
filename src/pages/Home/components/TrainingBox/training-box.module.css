@@ -2,11 +2,10 @@
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  
-  border-radius: 32px;
-  
-  padding: 1.375rem 1.125rem;
 
+  border-radius: 32px;
+
+  padding: 1.375rem 1.125rem;
 }
 
 .container.secondary {
@@ -55,6 +54,12 @@
     align-items: center;
     justify-content: center;
   }
-
- 
-} 
+}
+@media (max-width: 480px) {
+  .container img {
+    max-width: 300px;
+  }
+  .container.secondary {
+    flex-wrap: wrap;
+  }
+}
